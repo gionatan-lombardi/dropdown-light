@@ -1,0 +1,22 @@
+{
+  "author": {
+    "name": "Gionatan Lombardi",
+    "url": "https://github.com/gionatan-lombardi"
+  },
+  "name": "dropdown-light",
+  "description": "A super simple dropdown script manager.",
+  "version": "1.0.0",
+  "main": "src/dropdown-light.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gionatan-lombardi/dropdown-light.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gionatan-lombardi/dropdown-light/issues"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4"
+  },
+  "license" : "MIT",
+  "keywords": ["jQuery", "jQuery Plugin", "dropdown", "dropdown plugin"]
+}
