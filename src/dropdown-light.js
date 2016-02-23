@@ -67,7 +67,7 @@ if (typeof jQuery === 'undefined') {
         $dropdown = $toggler.siblings( $(self.opts.dropdownClass) );
         // Event Listeners
         $toggler.on( 'click.dropdownLight', toggleDropdown);
-        $(document).on("click.dropdownLight", outsideCloseDropdown);
+        if (self.opts.outsideClose) $(document).on("click.dropdownLight", outsideCloseDropdown);
       };
 
       init();
@@ -79,7 +79,8 @@ if (typeof jQuery === 'undefined') {
   // Default Plugin Options
   $.fn.dropdownLight.defaults = {
     dropdownClass: '.dropdownMenu',
-    togglerClass: '.dropdownToggler'
+    togglerClass: '.dropdownToggler',
+    outsideClose: true
   };
 
 })(jQuery);
