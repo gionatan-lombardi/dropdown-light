@@ -1,5 +1,3 @@
-var $ = require('jquery');
-
 /*!
  * dropdown-light 
  * v1.0.0
@@ -43,7 +41,6 @@ if (typeof jQuery === 'undefined') {
           // Adds an active class to the toggler
           $(this).addClass('is-active');
         } 
-        e.stopPropagation();
       };
 
       function outsideCloseDropdown(e) {
