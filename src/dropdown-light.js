@@ -44,7 +44,9 @@ if (typeof jQuery === 'undefined') {
       };
 
       function outsideCloseDropdown(e) {
-        if (!$toggler.is(e.target) // the click is not on the toggler
+        if (
+          !$toggler.is(e.target) // the click is not on the toggler
+          && $toggler.has(e.target).length === 0 // the click is not on a descendant of the toggler
           && $dropdown.has(e.target).length === 0 // the click is not on a descendant of the select
           && isOpen( $dropdown )
         ) {
