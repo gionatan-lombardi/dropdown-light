@@ -1,2 +1,4 @@
 # dropdown-light
-A super simple dropdown script manager. Requires jQuery
+A super simple dropdown script manager.
+
+Requires jQuery
