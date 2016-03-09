@@ -6,80 +6,163 @@
  * Licensed under the MIT license
  */
 
-if (typeof jQuery === 'undefined') {
-  throw new Error('Dropdown Light requires jQuery')
+(function(window) {
+
+'use strict';
+   
+// Utility Functions
+
+//http://youmightnotneedjquery.com/#deep_extend
+function extend(out) {
+  out = out || {};
+
+  for (var i = 1; i < arguments.length; i++) {
+    var obj = arguments[i];
+
+    if (!obj)
+      continue;
+
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (typeof obj[key] === 'object')
+          out[key] = extend(out[key], obj[key]);
+        else
+          out[key] = obj[key];
+      }
+    }
+  }
+
+  return out;
 }
 
-(function($) {
+// http://youmightnotneedjquery.com/#add_class
+function addClass(el, className) {
+  if (el.classList)
+    el.classList.add(className);
+  else
+    el.className += ' ' + className;
+}
 
-  'use strict';
+// http://youmightnotneedjquery.com/#remove_class
+function removeClass(el, className) {
+  if (el.classList)
+    el.classList.remove(className);
+  else
+    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+}
 
-  $.fn.dropdownLight = function( options ) {
-   
-    var self = this;
+// http://youmightnotneedjquery.com/#has_class
+function hasClass(el, className) {
+  if (el.classList)
+    return el.classList.contains(className);
+  else
+    return ( new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className) );
+}
 
-    // Extend the default options with those provided.
-    self.opts = $.extend( {}, $.fn.dropdownLight.defaults, options );
+// Loops over a DOM NodeList
+function forEachNodeList(nodeList, todo) {
+  for (var i = 0, l = nodeList.length; i < l; ++i) {
+    var el = nodeList[i];
+    todo(el,i);
+  }
+}
 
-    this.each( function () {
+var buildObj = {
 
-      var $toggler = $(this);
-      var $dropdown;
+  handleEvent: function(e) {
+    // The click is on the toggler or a descendant e.g. a <span> tag
+    if ( ( e.target === this.toggler || this.toggler.contains(e.target) ) && e.type === 'click' ) this.toggleDropdown();
+    // The click is outside
+    else this.outsideCloseDropdown(e);
+  },
 
-      function toggleDropdown(e) {
-        if ( isOpen( $dropdown ) ) {
-          $dropdown.removeClass('is-open');
-          $(this).removeClass('is-active');
-        } 
-        else {
-          // closes all dropdowns with the same class
-          $(self.opts.dropdownClass).removeClass('is-open');
-          // Removes the active class from the others togglers with the same class
-          $(self.opts.togglerClass).removeClass('is-active');
-          // Opens the selected dropdown
-          $dropdown.addClass('is-open');
-          // Adds an active class to the toggler
-          $(this).addClass('is-active');
-        } 
-      };
+  toggleDropdown: function toggleDropdown() {
+      if ( hasClass(this.dropdown, 'is-open') ) {
+        removeClass(this.dropdown, 'is-open');
+        removeClass(this.toggler, 'is-active');
+      } else {
+        var allDropdowns = document.querySelectorAll(this.options.dropdownClass);
+        // closes all dropdowns with the same class
+        forEachNodeList(allDropdowns, function(el,i) {
+          removeClass(el, 'is-open')
+        });
+        var allTogglers = document.querySelectorAll(this.options.togglerClass);
+        // Removes the active class from the others togglers with the same class
+        forEachNodeList(allTogglers, function(el,i) {
+          removeClass(el, 'is-active');
+        });
+        // Opens the selected dropdown
+        addClass(this.dropdown,'is-open');
+        // Adds an active class to the toggler
+        addClass(this.toggler,'is-active');
+      }
+  },
 
-      function outsideCloseDropdown(e) {
-        if (
-          !$toggler.is(e.target) // the click is not on the toggler
-          && $toggler.has(e.target).length === 0 // the click is not on a descendant of the toggler
-          && $dropdown.has(e.target).length === 0 // the click is not on a descendant of the select
-          && isOpen( $dropdown )
-        ) {
-          $dropdown.removeClass('is-open');
-          $toggler.removeClass('is-active');
-        }
-      };
+  outsideCloseDropdown: function outsideCloseDropdown(e) {
+    if (
+      this.dropdown !== e.target // the click is not on the dropdown
+      && !this.dropdown.contains(e.target) // the click is not on a descendant of the dropdown
+      && hasClass(this.dropdown, 'is-open')
+    ) {
+      removeClass(this.dropdown,'is-open');
+      removeClass(this.toggler,'is-active');
+    }
+  },
 
-      // UTILITY FUNCTIONS
-      function isOpen( $elem ) {
-        if ( $elem.hasClass('is-open') ) return true;
-        else return false;
-      };
+  destroy: function destroy() {
+    // Event Listeners removing
+    if (this.options.outsideClose) document.removeEventListener('click', this);
+    else this.toggler.removeEventListener('click', this);
+  },
 
-      // Public function
-      function init() {
-        $dropdown = $toggler.siblings( $(self.opts.dropdownClass) );
-        // Event Listeners
-        $toggler.on( 'click.dropdownLight', toggleDropdown);
-        if (self.opts.outsideClose) $(document).on("click.dropdownLight", outsideCloseDropdown);
-      };
+  // Init function
+  init: function init(element) {
+    // The dropdown container element
+    this.container = document.querySelector(element);
 
-      init();
+    // The toggler element
+    this.toggler = this.container.querySelector(this.options.togglerClass);
 
-    });
+    // The dropdown element
+    this.dropdown = this.container.querySelector(this.options.dropdownClass);
 
-  };
+    // Event Listeners
+    if (this.options.outsideClose) document.addEventListener('click', this);
+    else this.toggler.addEventListener('click', this);
 
-  // Default Plugin Options
-  $.fn.dropdownLight.defaults = {
+    // Public exposed methods
+    return {
+      toggleDropdown: this.toggleDropdown.bind(this),
+      destroy: this.destroy.bind(this)
+    }
+  },
+
+};
+
+// The Plugin Function (init)
+function dropdownLight(element, cstOptions) {
+  var defaultOptions = {
     dropdownClass: '.dropdownMenu',
     togglerClass: '.dropdownToggler',
     outsideClose: true
-  };
+  }
+  var options = extend(defaultOptions, cstOptions);
+  var o = Object.create(buildObj);
+  o.options = options;
 
-})(jQuery);
+  return o.init(element);
+};
+
+// transport
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( dropdownLight );
+} else if ( typeof exports === 'object' ) {
+  // CommonJS
+  module.exports = dropdownLight;
+} else {
+  // browser global
+  window.dropdownLight = dropdownLight;
+}
+
+})( window );
