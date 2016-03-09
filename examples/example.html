@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dropdown Light jQuery Plugin</title>
+    <style type="text/css">
+      body {
+        font-family: Arial;
+        font-size: 2rem;
+      }
+      .dropdown-toggler,
+      .dropdownToggler {
+        font-size: 2rem;
+        padding: .5rem;
+      }
+      .dropdown-toggler.is-active,
+      .dropdownToggler.is-active {
+        background-color: yellow;
+      }
+      .dropdown-menu,
+      .dropdownMenu {
+        max-height: 0;
+        transition: max-height .5s ease-out;
+        overflow: hidden;
+        background-color: #ccc;
+        margin: 0 0 2rem;
+        max-width: 6rem;
+      }
+      .dropdown-menu.is-open,
+      .dropdownMenu.is-open {
+        max-height: 10rem;
+      }
+    </style>
+
+  </head>
+  <body>
+    <h1>Hello, Dropdown!</h1>
+    <div class="dropdown1">
+      <button type="button" class="dropdownToggler"><span>Toggler</span></button>
+      <ul class="dropdownMenu">
+        <li>Foo</li>
+        <li>Bar</li>
+        <li>Baz</li>
+      </ul>
+    </div>
+
+    <div class="dropdown2">
+      <button type="button" class="dropdown-toggler">Toggler</button>
+      <ul class="dropdown-menu">
+        <li>Liz</li>
+        <li>Tur</li>
+        <li><span>Fiur</span></li>
+      </ul>
+    </div>
+    <script src="../src/dropdown-light.js"></script>
+    <script type="text/javascript">
+      dropdownLight('.dropdown1');
+      var drop2 = dropdownLight('.dropdown2',{
+        dropdownClass: '.dropdown-menu',
+        togglerClass: '.dropdown-toggler',
+        outsideClose: false
+      });
+      // Public Exposed Methods
+      // After 2 sec Toggles the dropdown with the provided plugin method
+      setTimeout( drop2.toggleDropdown, 1000);
+      // After 10 sec removes all the listeners with the provided plugin method
+      setTimeout( drop2.destroy, 10000);
+    </script>
+  </body>
+</html>
