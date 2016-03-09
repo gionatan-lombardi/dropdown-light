@@ -5,6 +5,17 @@ A super simple dropdown script manager.
 jQuery requirements removed.
 
 
+
+## Install
+
+### Download
+
+* [dropdown-light.js](https://github.com/gionatan-lombardi/dropdown-light/blob/master/src/dropdown-light.js)
+
+### Package managers
+
+Install via [npm](https://www.npmjs.com/package/dropdown-light): `npm install dropdown-light`
+
 ## How it works
 Start with a simple dropdown markup:
 ```html
