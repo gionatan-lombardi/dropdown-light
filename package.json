@@ -5,7 +5,7 @@
   },
   "name": "dropdown-light",
   "description": "A super simple dropdown script manager.",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "src/dropdown-light.js",
   "repository": {
     "type": "git",
@@ -14,5 +14,10 @@
   "bugs": {
     "url": "https://github.com/gionatan-lombardi/dropdown-light/issues"
   },
-  "keywords": ["JavaScript", "JavaScript Plugin", "dropdown", "dropdown plugin"]
+  "keywords": [
+    "JavaScript",
+    "JavaScript Plugin",
+    "dropdown",
+    "dropdown plugin"
+  ]
 }
