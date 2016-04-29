@@ -38,7 +38,16 @@
   <body>
     <h1>Hello, Dropdown!</h1>
     <div class="dropdown1">
-      <button type="button" class="dropdownToggler"><span>Toggler</span></button>
+      <button type="button" class="dropdownToggler"><span>Toggler1a</span></button>
+      <ul class="dropdownMenu">
+        <li>Foo</li>
+        <li>Bar</li>
+        <li>Baz</li>
+      </ul>
+    </div>
+
+    <div class="dropdown1">
+      <button type="button" class="dropdownToggler"><span>Toggler1b</span></button>
       <ul class="dropdownMenu">
         <li>Foo</li>
         <li>Bar</li>
@@ -47,7 +56,7 @@
     </div>
 
     <div class="dropdown2">
-      <button type="button" class="dropdown-toggler">Toggler</button>
+      <button type="button" class="dropdown-toggler">Toggler2</button>
       <ul class="dropdown-menu">
         <li>Liz</li>
         <li>Tur</li>
@@ -57,16 +66,14 @@
     <script src="../src/dropdown-light.js"></script>
     <script type="text/javascript">
       dropdownLight('.dropdown1');
-      var drop2 = dropdownLight('.dropdown2',{
+      // Public Exposed Methods
+      var drop2 = new dropdownLight('.dropdown2',{
         dropdownClass: '.dropdown-menu',
         togglerClass: '.dropdown-toggler',
         outsideClose: false
       });
-      // Public Exposed Methods
-      // After 2 sec Toggles the dropdown with the provided plugin method
-      setTimeout( drop2.toggleDropdown, 1000);
-      // After 10 sec removes all the listeners with the provided plugin method
-      setTimeout( drop2.destroy, 10000);
+      // After 5 sec removes all the listeners with the provided plugin method
+      setTimeout( drop2.destroy, 5000);
     </script>
   </body>
 </html>

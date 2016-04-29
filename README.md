@@ -4,8 +4,6 @@ A super simple dropdown script manager.
 **Version 2.0.0**  
 jQuery requirements removed.
 
-
-
 ## Install
 
 ### Download
@@ -74,10 +72,6 @@ Clicking outside the dropdown closes the panel. You can set this to false.
 
 
 ## Methods
-
-### toggleDropdown()
-
-Toggles the dropdown.
 
 ### destroy()
 
