@@ -66,11 +66,15 @@ function isFunction(functionToCheck) {
 }
 
 // Loops over a DOM NodeList
-function forEachNodeList(nodeList, todo) {
+function forEachNode(nodeList, todo) {
   for (var i = 0, l = nodeList.length; i < l; ++i) {
     var el = nodeList[i];
-    todo(el,i);
+    // The callback takes as params the current element and the index
+    var o = todo(el,i);
+    // If the callback returns the string "break" the loop'll be stopped
+    if ( o === "break") break;
   }
+  return nodeList;
 }
 
 var buildObj = {
@@ -79,7 +83,7 @@ var buildObj = {
     var self = this;
     var outsideClose = true;
     // The click is on the toggler or a descendant e.g. a <span> tag
-    forEachNodeList(this.togglers, function (el, i) {
+    forEachNode(this.togglers, function (el, i) {
       if ( ( e.target === el || el.contains(e.target) ) && e.type === 'click' ) {
         var toggler = el;
         var dropdown = el.parentNode.querySelector(self.options.dropdownClass);
@@ -100,12 +104,12 @@ var buildObj = {
       } else {
         var allDropdowns = document.querySelectorAll(this.elementClass + " " + this.options.dropdownClass);
         // closes all dropdowns with the same class
-        forEachNodeList(allDropdowns, function(el,i) {
+        forEachNode(allDropdowns, function(el,i) {
           removeClass(el, 'is-open')
         });
         var allTogglers = document.querySelectorAll(this.elementClass + " " + this.options.togglerClass);
         // Removes the active class from the others togglers with the same class
-        forEachNodeList(allTogglers, function(el,i) {
+        forEachNode(allTogglers, function(el,i) {
           removeClass(el, 'is-active');
         });
         // Opens the selected dropdown
@@ -119,7 +123,7 @@ var buildObj = {
 
   outsideCloseDropdown: function outsideCloseDropdown(e) {
     var self = this;
-    forEachNodeList(this.dropdowns, function (el, i) {
+    forEachNode(this.dropdowns, function (el, i) {
       if (
         el !== e.target // the click is not on the dropdown
         && !el.contains(e.target) // the click is not on a descendant of the dropdown
@@ -135,8 +139,6 @@ var buildObj = {
     });
   },
 
-  // Public Exposed methods
-  
   publicCallback: function onOpen(fn) {
     if(typeof fn === 'undefined')
       return;
@@ -146,12 +148,41 @@ var buildObj = {
       throw new Error('dropdown-ligh - onOpen: the argument must be a function.');
   },
 
+  // Public Exposed methods
+  
+  toggle: function toggle(index) {
+    var self = this;
+    var togglers = document.querySelector(self.elementClass + " " + self.options.togglerClass);
+    var toggledDropdown = {};
+    forEachNode(self.togglers, function (el, i) {
+      var dropdown = el.parentNode.querySelector(self.options.dropdownClass); 
+      if ( hasClass(dropdown, 'is-open') ) {
+        removeClass(dropdown, 'is-open');
+        removeClass(el, 'is-active');
+        // Calls the callback provided by the plugin user in the options
+        self.publicCallback(self.options.onClose);
+        toggledDropdown.el = dropdown;
+        toggledDropdown.index = i;
+        return "break";
+      }
+    });
+    var usedIndex = typeof index === "number" ? parseInt(index) : typeof toggledDropdown.index === "undefined" ? 0 : null;
+    if (usedIndex !== null && toggledDropdown.index !== usedIndex) {
+      var currentToggler = self.togglers[usedIndex]
+      var currentDropdown = currentToggler.parentNode.querySelector(self.options.dropdownClass);
+      self.toggleDropdown(currentToggler, currentDropdown);
+      toggledDropdown.el = currentDropdown;
+      toggledDropdown.index = usedIndex;
+    }
+    return toggledDropdown.el;
+  },
+
   destroy: function destroy() {
     var self = this;
     // Event Listeners removing
     if (self.options.outsideClose) document.removeEventListener('click', self);
     else {
-      forEachNodeList(self.togglers, function (el, i) {
+      forEachNode(self.togglers, function (el, i) {
         el.removeEventListener('click', self);
       });
     } 
@@ -173,7 +204,7 @@ var buildObj = {
     // Event Listeners
     if (self.options.outsideClose) document.addEventListener('click', self);
     else {
-      forEachNodeList(self.togglers, function (el, i) {
+      forEachNode(self.togglers, function (el, i) {
         el.addEventListener('click', self);
       });
     } 
@@ -181,6 +212,7 @@ var buildObj = {
     // Public exposed methods
     return {
       destroy: this.destroy.bind(this),
+      toggle: this.toggle.bind(this)
     }
   },
 

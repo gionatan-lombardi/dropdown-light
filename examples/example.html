@@ -65,7 +65,7 @@
     </div>
     <script src="../src/dropdown-light.js"></script>
     <script type="text/javascript">
-      dropdownLight('.dropdown1');
+      var drop1 = dropdownLight('.dropdown1');
       // Public Exposed Methods
       var drop2 = new dropdownLight('.dropdown2',{
         dropdownClass: '.dropdown-menu',
@@ -78,8 +78,10 @@
           console.log('dropdown 2 closes!')
         }
       });
-      // After 5 sec removes all the listeners with the provided plugin method
+      // After 5 secs removes all the listeners with the provided plugin method
       setTimeout( drop2.destroy, 5000);
+      // After 3 secs toggles the dropdown
+      setTimeout( drop1.toggle, 3000);
     </script>
   </body>
 </html>
