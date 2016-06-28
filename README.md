@@ -70,6 +70,18 @@ Default: `true`
 
 Clicking outside the dropdown closes the panel. You can set this to false.
 
+### onOpen
+Type: `function`  
+Default: `undefined`
+
+A custom callback called when the dropdown opens.
+
+### onClose
+Type: `function`  
+Default: `undefined`
+
+A custom callback called when the dropdown closes.
+
 
 ## Methods
 

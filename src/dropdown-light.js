@@ -9,7 +9,7 @@
 (function(window) {
 
 'use strict';
-   
+
 // Utility Functions
 
 //http://youmightnotneedjquery.com/#deep_extend
@@ -59,6 +59,12 @@ function hasClass(el, className) {
     return ( new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className) );
 }
 
+// http://stackoverflow.com/questions/5999998/how-can-i-check-if-a-javascript-variable-is-function-type
+function isFunction(functionToCheck) {
+ var getType = {};
+ return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+}
+
 // Loops over a DOM NodeList
 function forEachNodeList(nodeList, todo) {
   for (var i = 0, l = nodeList.length; i < l; ++i) {
@@ -89,6 +95,8 @@ var buildObj = {
       if ( hasClass(dropdown, 'is-open') ) {
         removeClass(dropdown, 'is-open');
         removeClass(toggler, 'is-active');
+        // Calls the callback provided by the plugin user in the options
+        this.publicCallback(this.options.onClose);
       } else {
         var allDropdowns = document.querySelectorAll(this.elementClass + " " + this.options.dropdownClass);
         // closes all dropdowns with the same class
@@ -104,6 +112,8 @@ var buildObj = {
         addClass(dropdown,'is-open');
         // Adds an active class to the toggler
         addClass(toggler,'is-active');
+        // Calls the callback provided by the plugin user in the options
+        this.publicCallback(this.options.onOpen);
       }
   },
 
@@ -119,8 +129,21 @@ var buildObj = {
         removeClass(el,'is-open');
         // The toggler
         removeClass(el.parentNode.querySelector(self.options.togglerClass),'is-active');
+        // Calls the callback provided by the plugin user in the options
+        this.publicCallback(this.options.onClose);
       }
     });
+  },
+
+  // Public Exposed methods
+  
+  publicCallback: function onOpen(fn) {
+    if(typeof fn === 'undefined')
+      return;
+    else if(isFunction(fn))
+      fn();
+    else
+      throw new Error('dropdown-ligh - onOpen: the argument must be a function.');
   },
 
   destroy: function destroy() {
@@ -157,7 +180,7 @@ var buildObj = {
 
     // Public exposed methods
     return {
-      destroy: this.destroy.bind(this)
+      destroy: this.destroy.bind(this),
     }
   },
 

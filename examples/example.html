@@ -70,7 +70,13 @@
       var drop2 = new dropdownLight('.dropdown2',{
         dropdownClass: '.dropdown-menu',
         togglerClass: '.dropdown-toggler',
-        outsideClose: false
+        outsideClose: false,
+        onOpen: function() {
+          console.log('dropdown 2 opens!')
+        },
+        onClose: function() {
+          console.log('dropdown 2 closes!')
+        }
       });
       // After 5 sec removes all the listeners with the provided plugin method
       setTimeout( drop2.destroy, 5000);
