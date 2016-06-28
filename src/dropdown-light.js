@@ -169,10 +169,14 @@ var buildObj = {
     var usedIndex = typeof index === "number" ? parseInt(index) : typeof toggledDropdown.index === "undefined" ? 0 : null;
     if (usedIndex !== null && toggledDropdown.index !== usedIndex) {
       var currentToggler = self.togglers[usedIndex]
-      var currentDropdown = currentToggler.parentNode.querySelector(self.options.dropdownClass);
-      self.toggleDropdown(currentToggler, currentDropdown);
-      toggledDropdown.el = currentDropdown;
-      toggledDropdown.index = usedIndex;
+      if (typeof currentToggler !== "undefined") {
+        var currentDropdown = currentToggler.parentNode.querySelector(self.options.dropdownClass);
+        self.toggleDropdown(currentToggler, currentDropdown);
+        toggledDropdown.el = currentDropdown;
+        toggledDropdown.index = usedIndex;
+      } else {
+        toggledDropdown.el = false;
+      }
     }
     return toggledDropdown.el;
   },
