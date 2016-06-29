@@ -181,6 +181,23 @@ var buildObj = {
     return toggledDropdown.el;
   },
 
+  close: function close() {
+    var self = this;
+    var closedDropdown;
+    forEachNode(self.togglers, function (el, i) {
+      var dropdown = el.parentNode.querySelector(self.options.dropdownClass); 
+      if ( hasClass(dropdown, 'is-open') ) {
+        removeClass(dropdown, 'is-open');
+        removeClass(el, 'is-active');
+        // Calls the callback provided by the plugin user in the options
+        self.publicCallback(self.options.onClose);
+        closedDropdown = dropdown;
+        return "break";
+      }
+    });
+    return closedDropdown;
+  },
+
   destroy: function destroy() {
     var self = this;
     // Event Listeners removing
@@ -216,6 +233,7 @@ var buildObj = {
     // Public exposed methods
     return {
       destroy: this.destroy.bind(this),
+      close: this.close.bind(this),
       toggle: this.toggle.bind(this)
     }
   },

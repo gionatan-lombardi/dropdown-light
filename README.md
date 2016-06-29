@@ -85,6 +85,16 @@ A custom callback called when the dropdown closes.
 
 ## Methods
 
+### close()
+
+Closes the dropdown.
+
+### toggle(index)
+index: `number` optional
+
+Toggles the dropdown.
+If there are multiple dropdowns in the same function instance (eg. accordion or dropdown menu) providing an index toggles the indexed element.
+
 ### destroy()
 
 Removes all the registered event listeners.
