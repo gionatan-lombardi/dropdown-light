@@ -181,6 +181,30 @@ var buildObj = {
     return toggledDropdown.el;
   },
 
+  open: function open(index) {
+    var self = this;
+    var openedDropdown;
+    var elIndex = index || 0;
+    forEachNode(self.togglers, function (el, i) {
+      var dropdown = el.parentNode.querySelector(self.options.dropdownClass); 
+      if (elIndex == i) {
+        if ( !hasClass(dropdown, 'is-open') ) {
+          addClass(dropdown, 'is-open');
+          addClass(el, 'is-active');
+          // Calls the callback provided by the plugin user in the options
+          self.publicCallback(self.options.onOpen);
+        }
+        openedDropdown = dropdown;
+      } else if ( hasClass(dropdown, 'is-open') ) {
+        removeClass(dropdown, 'is-open');
+        removeClass(el, 'is-active');
+        // Calls the callback provided by the plugin user in the options
+        self.publicCallback(self.options.onClose);
+      }
+    });
+    return openedDropdown;
+  },
+
   close: function close() {
     var self = this;
     var closedDropdown;
@@ -233,6 +257,7 @@ var buildObj = {
     // Public exposed methods
     return {
       destroy: this.destroy.bind(this),
+      open: this.open.bind(this),
       close: this.close.bind(this),
       toggle: this.toggle.bind(this)
     }

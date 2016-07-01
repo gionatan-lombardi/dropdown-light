@@ -85,6 +85,12 @@ A custom callback called when the dropdown closes.
 
 ## Methods
 
+### open(index)
+index: `number` optional
+
+Opens the dropdown.
+If there are multiple dropdowns in the same function instance (eg. accordion or dropdown menu) providing an index openes the indexed element, closing others if open.
+
 ### close()
 
 Closes the dropdown.
