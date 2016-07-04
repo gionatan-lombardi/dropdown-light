@@ -71,15 +71,15 @@
         dropdownClass: '.dropdown-menu',
         togglerClass: '.dropdown-toggler',
         outsideClose: false,
-        onOpen: function() {
-          console.log('dropdown 2 opens!')
+        onOpen: function(el) {
+          console.log(el, 'Dropdown 2 opens!')
         },
-        onClose: function() {
-          console.log('dropdown 2 closes!')
+        onClose: function(el) {
+          console.log(el, 'Dropdown 2 closes!')
         }
       });
-      // After 5 secs removes all the listeners with the provided plugin method
-      setTimeout( drop2.destroy, 5000);
+      // After 20 secs removes all the listeners with the provided plugin method
+      setTimeout( drop2.destroy, 20000);
       // After 3 secs toggles the dropdown
       setTimeout( drop1.toggle, 3000);
     </script>

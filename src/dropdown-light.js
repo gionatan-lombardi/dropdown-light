@@ -100,7 +100,7 @@ var buildObj = {
         removeClass(dropdown, 'is-open');
         removeClass(toggler, 'is-active');
         // Calls the callback provided by the plugin user in the options
-        this.publicCallback(this.options.onClose);
+        this.publicCallback(this.options.onClose, dropdown);
       } else {
         var allDropdowns = document.querySelectorAll(this.elementClass + " " + this.options.dropdownClass);
         // closes all dropdowns with the same class
@@ -117,13 +117,13 @@ var buildObj = {
         // Adds an active class to the toggler
         addClass(toggler,'is-active');
         // Calls the callback provided by the plugin user in the options
-        this.publicCallback(this.options.onOpen);
+        this.publicCallback(this.options.onOpen, dropdown);
       }
   },
 
   outsideCloseDropdown: function outsideCloseDropdown(e) {
     var self = this;
-    forEachNode(this.dropdowns, function (el, i) {
+    forEachNode(self.dropdowns, function (el, i) {
       if (
         el !== e.target // the click is not on the dropdown
         && !el.contains(e.target) // the click is not on a descendant of the dropdown
@@ -134,18 +134,18 @@ var buildObj = {
         // The toggler
         removeClass(el.parentNode.querySelector(self.options.togglerClass),'is-active');
         // Calls the callback provided by the plugin user in the options
-        this.publicCallback(this.options.onClose);
+        self.publicCallback(self.options.onClose, el);
       }
     });
   },
 
-  publicCallback: function onOpen(fn) {
+  publicCallback: function onOpen(fn, el) {
     if(typeof fn === 'undefined')
       return;
     else if(isFunction(fn))
-      fn();
+      fn(el);
     else
-      throw new Error('dropdown-ligh - onOpen: the argument must be a function.');
+      throw new Error('dropdown-ligh: the argument must be a function');
   },
 
   // Public Exposed methods
@@ -160,7 +160,7 @@ var buildObj = {
         removeClass(dropdown, 'is-open');
         removeClass(el, 'is-active');
         // Calls the callback provided by the plugin user in the options
-        self.publicCallback(self.options.onClose);
+        self.publicCallback(self.options.onClose, dropdown);
         toggledDropdown.el = dropdown;
         toggledDropdown.index = i;
         return "break";
@@ -192,14 +192,14 @@ var buildObj = {
           addClass(dropdown, 'is-open');
           addClass(el, 'is-active');
           // Calls the callback provided by the plugin user in the options
-          self.publicCallback(self.options.onOpen);
+          self.publicCallback(self.options.onOpen, dropdown);
         }
         openedDropdown = dropdown;
       } else if ( hasClass(dropdown, 'is-open') ) {
         removeClass(dropdown, 'is-open');
         removeClass(el, 'is-active');
         // Calls the callback provided by the plugin user in the options
-        self.publicCallback(self.options.onClose);
+        self.publicCallback(self.options.onClose, dropdown);
       }
     });
     return openedDropdown;
@@ -214,7 +214,7 @@ var buildObj = {
         removeClass(dropdown, 'is-open');
         removeClass(el, 'is-active');
         // Calls the callback provided by the plugin user in the options
-        self.publicCallback(self.options.onClose);
+        self.publicCallback(self.options.onClose, dropdown);
         closedDropdown = dropdown;
         return "break";
       }
